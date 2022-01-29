@@ -43,7 +43,7 @@ for i in range(food_size):
     food_list.append([x, y, id1, id2])
 print(food_list)
 # ~~~~~~~~~~~~~~~~~~~~~~~
-def snake_paint (canvas,x,y):
+def snake_paint (canvas, x, y):
     global snake_list
     id1 = canvas.create_rectangle (x*snake,y*snake,x*snake+snake,y*snake+snake,fill = snake_colour2)
     id2 = canvas.create_rectangle (x * snake + 2, y * snake + 2, x * snake+snake - 2, y * snake+snake - 2, fill = snake_colour)
