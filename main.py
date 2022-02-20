@@ -1,4 +1,5 @@
 # from tkinter import*
+import time
 from tkinter import *
 import random
 
@@ -41,7 +42,7 @@ for i in range(food_size):
     id1 = canvas.create_oval (x * snake, y * snake, x * snake + snake, y * snake + snake, fill=food_colour2)
     id2 = canvas.create_oval (x * snake + 2, y * snake + 2, x * snake + snake - 2, y * snake + snake - 2,fill=food_colour)
     food_list.append([x, y, id1, id2])
-print(food_list)
+# print(food_list)
 # ~~~~~~~~~~~~~~~~~~~~~~~
 def snake_paint (canvas,x,y):
     global snake_list
@@ -82,8 +83,27 @@ def snake_move (event):
     snakex = snakex + snakex_new
     snakey = snakey + snakey_new
     snake_paint(canvas,snakex,snakey)
-# ~~~~~~~~~~~~~~~~~~~~~~~
+    eat_food()
+def eat_food ():
+    global snake_size
+    for i in range (len (food_list)):
+        if food_list [i][0] == snakex and food_list [i][1] == snakey:
+            snake_size = snake_size + 1
+            canvas.delete (food_list[i][2])
+            canvas.delete (food_list[i][3])
 
+# ~~~~~~~~~~~~~~~~~~~~~~~
+def tach_borders ():
+    if snakex<0 or snakey<0 or snakex>realfoodx or snakey>realfoody:
+        game_over ()
+def game_over ():
+    global Game_Running
+    Game_Running = False
+def snake_stop ():
+    if not (snakex_new==0 and snakey_new==0):
+        for i in range (len(snake_list)):
+            if snake_list [i][0]==snakex + snakex_new and snake_list [i][1]== snakey + snakey_new:
+                game_over()
 # ~~~~~~~~~~~~~~~~~~~~~~~
 canvas.bind_all("<KeyPress-Right>", snake_move)
 canvas.bind_all("<KeyPress-Left>", snake_move)
@@ -92,4 +112,13 @@ canvas.bind_all("<KeyPress-Down>", snake_move)
 # ~~~~~~~~~~~~~~~~~~~~~~~
 # Бесконечный цикл
 while Game_Running:
+    snakex = snakex + snakex_new
+    snakey = snakey + snakey_new
+    snake_paint(canvas, snakex, snakey)
+    #print (snake_list)
+    tach_borders()
+    snake_stop()
+    time.sleep(0.5)
+    snake_size_delete()
+    eat_food()
     tk.update ()
