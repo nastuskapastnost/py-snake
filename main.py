@@ -36,13 +36,14 @@ canvas = Canvas (tk, width=window_width, height=window_height, bd=0, highlightth
 canvas.pack ()
 tk.update ()
 # ~~~~~~~~~~~~~~~~~~~~~~~
-for i in range(food_size):
-    x = random.randrange(realfoodx)
-    y = random.randrange(realfoody)
-    id1 = canvas.create_oval (x * snake, y * snake, x * snake + snake, y * snake + snake, fill=food_colour2)
-    id2 = canvas.create_oval (x * snake + 2, y * snake + 2, x * snake + snake - 2, y * snake + snake - 2,fill=food_colour)
-    food_list.append([x, y, id1, id2])
-# print(food_list)
+def food_paint ():
+    for i in range(food_size):
+        x = random.randrange(realfoodx)
+        y = random.randrange(realfoody)
+        id1 = canvas.create_oval (x * snake, y * snake, x * snake + snake, y * snake + snake, fill=food_colour2)
+        id2 = canvas.create_oval (x * snake + 2, y * snake + 2, x * snake + snake - 2, y * snake + snake - 2,fill=food_colour)
+        food_list.append([x, y, id1, id2])
+food_paint ()
 # ~~~~~~~~~~~~~~~~~~~~~~~
 def snake_paint (canvas,x,y):
     global snake_list
@@ -86,12 +87,18 @@ def snake_move (event):
     eat_food()
 def eat_food ():
     global snake_size
+    global food_list
     for i in range (len (food_list)):
         if food_list [i][0] == snakex and food_list [i][1] == snakey:
             snake_size = snake_size + 1
             canvas.delete (food_list[i][2])
-            canvas.delete (food_list[i][3])
-
+            canvas.delete(food_list[i][3])
+            food_list.pop (i)
+            print(food_list)
+# ~~~~~~~~~~~~~~~~~~~~~~~
+def apple_control ():
+    if len(food_list) < food_size:
+        food_paint()
 # ~~~~~~~~~~~~~~~~~~~~~~~
 def tach_borders ():
     if snakex<0 or snakey<0 or snakex>realfoodx or snakey>realfoody:
@@ -115,6 +122,7 @@ while Game_Running:
     snakex = snakex + snakex_new
     snakey = snakey + snakey_new
     snake_paint(canvas, snakex, snakey)
+    apple_control()
     #print (snake_list)
     tach_borders()
     snake_stop()
